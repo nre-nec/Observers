@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام استعلام المراقبين - كلية الشمال للتمريض الأهلية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem;
+            border-bottom: 3px solid #2563eb;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        .title-section {
+            flex: 1;
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .title-section h1 {
+            font-size: 1.8rem;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .title-section p {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .date-display {
+            background: #1e293b;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 2px solid #334155;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background: #334155;
+            border-color: #2563eb;
+        }
+
+        .tab-button.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1.5rem;
+            border: 1px solid #334155;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #0f172a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #2563eb;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: right;
+            font-weight: 600;
+            color: white;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        tbody tr:hover {
+            background: #1e293b;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .footer {
+            background: #1e293b;
+            padding: 1.5rem;
+            text-align: center;
+            color: #94a3b8;
+            border-top: 3px solid #2563eb;
+            margin-top: auto;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* بطاقات الإحصائيات */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+            border-color: #2563eb;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            background: #2563eb;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        .progress-bar {
+            background: #0f172a;
+            height: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #2563eb 0%, #3b82f6 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 0.75rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: width 0.6s ease;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+
+        .stat-item:hover {
+            background: #0f172a;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .header {
+                background: white;
+                border-bottom: 2px solid #2563eb;
+            }
+
+            .tabs,
+            .btn,
+            .search-filters,
+            .footer,
+            .stats-container {
+                display: none !important;
+            }
+
+            .card {
+                background: white;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+            table {
+                background: white;
+            }
+
+            th {
+                background: #2563eb !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            td {
+                color: black;
+            }
+
+            .title-section h1 {
+                color: #2563eb;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .title-section h1 {
+                font-size: 1.3rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjQ4IiBzdHJva2U9IiMyNTYzZWIiIHN0cm9rZS13aWR0aD0iMyIvPgo8cGF0aCBkPSJNNTAgMjBDNTAgMjAgMzUgMzUgMzUgNTBDMzUgNjUgNTAgODAgNTAgODBDNTAgODAgNjUgNjUgNjUgNTBDNjUgMzUgNTAgMjAgNTAgMjBaIiBmaWxsPSIjMjU2M2ViIi8+CjxyZWN0IHg9IjQwIiB5PSI0MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjQwIiB5PSI1MiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjgiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="شعار كلية الشمال">
+            <div class="title-section">
+                <h1>نظام استعلام المراقبين</h1>
+                <p>كلية الشمال للتمريض الأهلية</p>
+            </div>
+            <div class="date-display" id="currentDate"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- لوحة الإحصائيات -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalMonitors">0</div>
+                    <div class="stat-label">إجمالي المراقبين</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📅</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalPeriods">0</div>
+                    <div class="stat-label">عدد الفترات</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏫</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalRooms">0</div>
+                    <div class="stat-label">عدد القاعات</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalAssignments">0</div>
+                    <div class="stat-label">إجمالي المهام</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('monitor')">🟩 استعلام المراقب</button>
+            <button class="tab-button" onclick="switchTab('committee')">🟦 لجنة الاختبارات</button>
+            <button class="tab-button" onclick="switchTab('statistics')">📈 الإحصائيات</button>
+        </div>
+
+        <div id="monitorTab" class="tab-content active">
+            <div class="card">
+                <div class="form-group">
+                    <label>اختر المراقب:</label>
+                    <select id="monitorSelect" onchange="loadMonitorSchedule()">
+                        <option value="">-- اختر المراقب --</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="window.print()">🖨️ طباعة</button>
+            </div>
+            <div id="monitorResult"></div>
+        </div>
+
+        <div id="committeeTab" class="tab-content">
+            <div class="card">
+                <div class="search-filters">
+                    <div class="form-group">
+                        <label>البحث بالفترة:</label>
+                        <select id="periodSelect" onchange="searchCommittee()">
+                            <option value="">-- جميع الفترات --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>البحث بالقاعة:</label>
+                        <input type="text" id="roomInput" placeholder="أدخل رقم القاعة" oninput="searchCommittee()">
+                    </div>
+                    <div class="form-group">
+                        <label>البحث بالمراقب:</label>
+                        <select id="committeeMonitorSelect" onchange="searchCommittee()">
+                            <option value="">-- جميع المراقبين --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="committeeResult"></div>
+        </div>
+
+        <!-- تبويب الإحصائيات -->
+        <div id="statisticsTab" class="tab-content">
+            <div class="card">
+                <h2 style="color: #2563eb; margin-bottom: 1.5rem;">📊 إحصائيات شاملة</h2>
+                <div id="detailedStats"></div>
+            </div>
+            
+            <div class="card">
+                <h2 style="color: #2563eb; margin-bottom: 1.5rem;">🏆 أكثر المراقبين نشاطًا</h2>
+                <div id="topMonitors"></div>
+            </div>
+
+            <div class="card">
+                <h2 style="color: #2563eb; margin-bottom: 1.5rem;">🏫 القاعات الأكثر استخدامًا</h2>
+                <div id="topRooms"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© وحدة التطوير والجودة – كلية الشمال للتمريض الأهلية</p>
+    </div>
+
+    <script>
+        let data = [];
+        
+        // البيانات الكاملة المدمجة مباشرة
+        const RAW_DATA_TEXT = `المراقب	2025-10-26 (الأولى)	2025-10-26 (الثانية)	2025-10-27 (الأولى)	2025-10-27 (الثانية)	2025-10-28 (الأولى)	2025-10-28 (الثانية)	2025-10-29 (الأولى)	2025-10-29 (الثانية)	2025-10-30 (الأولى)	2025-10-30 (الثانية)	2025-11-02 (الأولى)	2025-11-02 (الثانية)	2025-11-03 (الأولى)	2025-11-03 (الثانية)	2025-11-04 (الأولى)	2025-11-04 (الثانية)	2025-11-05 (الأولى)	2025-11-05 (الثانية)	2025-11-06 (الأولى)	26(4:00-5:00)	26(5:30-6:30)	27(4:00-5:00)	27(5:30-6:30)	28(4:00-5:00)	28(5:30-6:30)	29(4:00-5:00)	29(5:30-6:30)	30(4:00-5:00)	30(5:30-6:30)	2(4:00-5:00)	2(5:30-6:30)	3(4:00-5:00)	3(5:30-6:30)	4(4:00-5:00)	4(5:30-6:30)	5(4:00-5:00)	5(5:30-6:30)	6(4:00-5:00)
+أسماء ابراهيم عبدالعزيز عامر	A7		A7	A7	A7		A7	A7	H6			B6	A7		A7		A7		A7						D8							C6				C7		
+أمال هاشم محمد	A7		A7	A7	A7		A7	A7	H8			B6				A7	A7	A7		D7				C6						C7				C7				
+أماني لطفي أحمد عمارة	A8		A8	A7	A7		A8	A7	A7			B6	A7		A7		A8	A7		C7						F10		D8										
+أميرة مصطفى فهمي اسماعيل	A8		A8	A8	A8		A8	A8	A7	A7		B7	A7		A7		A8	A7														C8		C6				
+أنفال ساير مرحول الرويلي	B1		B1	A8	A8		B6	A8	A7			B7	A8		A8		B3	A8	A7															D5	D6			
+إدلينا سانتوس	B1		B1	A8	A8		B6	A8	A8			B7	A8		A8		B3	A8	A7															C8				C6
+إيمان مختار محمد جبر	B2		B2	B6	B6		B7	B6	A8			B8					B6								D7		F7							D4	D6			D6
+اسماء عبدالله احمد حسين	B2		B2	B6	B6		B7	B6	A8			B8	A8		A8		B6	A8		D7										B8								D7
+اشراقه عبيد محمد صالح	B3		B3	B6	B6		B8	B6	B6			B8	B6		B6		B7	B6				D5				F9												
+ايمان محمد محمد ابوبكر	B3		B3	B7	B7		B8	B7	B6			C6	B6				B7	B6				D6					F7			C7						D8		
+بتعة محمود محمد إسماعيل	B6		B6	B7	B7		C2	B7	B7			C6	B6		B6		B8	B6	A8						D8					C6								
+براء طعمة ابوالسل	B6		B6	B7	B7		C2	B7	B7			C6	B7		B6	A7	B8										F7		D7		B7							
+جيهان احمد البهلوان	B7		B7	B8	B8		C6	B8	B7			C7	B7		B7		C2	B7						C7						C6					C9			
+داليا محمد فتحي عبد المقصود	B7		B7	B8	B8		C6	B8	B8			C7	B7		B7	A7	C2	B7																D5		D8		
+رانيا عبد الخالق جودة الحسين	B8		B8	B8	B8		C7	B8	B8	A7		C7	B8		B7	A8	C6	B7	A8																			
+رشا عبدالحليم  القاضي	B8	A7	B8	C2	C6		C7	D6	C6			C8	B8		C7	A8	C6	B8	A8																			
+رولا حسن محمد ازهري	C6		C2	C2	C7		C8	D6	C7	A7		C8	C6		C7		C7	B8		D7																		
+ريم علي حوفان الشمراني	C7	A7	C6	C6	C7	A7	C9	D7	C7	A8																												
+زينب ربيع عبد المرضي	C7		C6	C6	C7		C9	D7	C7			C9	C6		C8		C8	C6							D7							F9						C9
+سارة رويشد خويتيم العنزي	C8		C7	C6	C8	A7	D4	D7	C8	A8		C9	C7		C8		C8															C9	A7					
+سلوي محمد جميل  الوفائي	C8	A7	C7	F10	C8		D4	D8	C8	A8		C9	C7			C6	C9		C6																			C8
+سهام شحاته مصطفى مرزوق	D1	A8	C8	F10	C8		D6	D8	C9			D6	C7			C6	C9		C6			D5					A7											
+سيرلي أجنود	D1		C8	F10	C9		D6	D8	C9	B6		D6	C8	C7		C6	D4		C7	D8																		
+شهد زياد علي الدندن	D4		C9	F8	C9		D7		D6	B6		D6	C8	C7		C7	D4		C7			D7										C6						
+ضحى عبد الهادي  محمد	D4		C9	F8	C9	A7	D7		D6	B6		D8	C8	C7			D5					D5						D8	D7									
+عايدة أحمد محمد إبراهيم	D5		D5	F8	D5	A8	D8		D7	B7	A7		C9				D5					D6							D7			C7						D6
+غادة صبحي حسن	D5		D5	F9	D5	A8	D8		D7	B7	A7		C9			C7	D6	C6													B7							D7
+فاتن فتحى أحمد محفوظ	D6		D6	F9	D6	A8	E10		E6	B7	A7		C9				D6	C6								F9						C7						C8
+لمياء عبد الحكيم على غراب	D6		D6		D6	B6	E10		E6	B8	A8		E10			C7	D7	C7	C7	D8												F9						
+مآثر جدعان عبدالحمن الجديع	D7		D7		D6	B6	E6		E8	B8	A8		E10			C8	D7		C8							F9							F10					C9
+مثايل فهد مبارك الشمري	D7		D7		D7	B6	E6		E8	B8	A8	D8	E10	C8		C8	D8	C7											D6									
+ملاك محمد يحيى يعقوب	D8		D8		D7	B7	E8		E9	C6	B6		E9	C8		C8	D8	C7	C8								A8											
+منال سلطان مداد الرويلي	D8		D8		D7	B7	E8		E9	C6	B6		E9	C9		C9	E6	C9	C8																			D7
+منال محمد أحمد عبدالعزيز	E10	A8	E10		D8	B7	E9		F10	C6	B6		E9			C9	E6										A8						F10		D6			
+منى تيمان إدريس قصب	E10	A8	E10		D8	B8	E9		F10	C7	B7		F10	C10		C9	E8																D4		D7			
+مها ابراهيم فؤاد العشري فودة	E6		E6		D8	B8	F2		F10	C7	B7		F10	C11		D6	E8		C9															C7				C6
+نجود عواد عودة العطوى	E6		E6		F10	B8	F2		F6	C7	B7		F10	C12		D6	E9											C8						C6	D7			
+ندى صقر حويل الرويلي	E8		E8		F10	D6	F5		F6	D6	D6		F6	C13		D6	E9		C9								A8	D8										
+نرجس محمد محمد صيام	E8		E8		F10	D6	F5		F7	D6	D6		F6	C14			F6		C9								A8	C9		B8								
+نعيمة محمد السيد احمد	E9		E9		F8	D6	F6		F7	D6	D6		F6	C15			F6					D7										C8	D5		C9			
+هبة أحمد عبدالمعطي	E9		E9		F8	D7	F6		F8	D7	D7		F7	C16			F7		D6			D7							D6	B8								
+هدايا إسماعيل أبو بكر إسماعيل	F8		F1		F8		F7		F8	D7	D7		F7	C17	C8	D7	F7		D6			D8										C9						
+هدي محمد عبد الرحمن فليفل	F8		F1		F9		F7		F9	D7	D7		F7	C18			F8		D6			D8				F10			C6						C8			
+هند ابو السعود أحمد الصعيدي	F9		F10		F9	D7	F8		F9	D8	D8		F8	C19	C9	D7	F8		D7							C8												
+هويدا محمد علي حسن										D8	D8	D8	F8	C8	C9	D7	F9	C9	D7	C9					D7	C9	A7		D6		B7							
+ياسمين سالم دراق	F9		F10	F9	F9	D7	F8		F9	D8	D8		F8		C9		F9	C9	D7															D4				
+نبيلة سالم محمد سالم			F2																																			
+نهيد الخطيب			F2																																			
+إدارية 1			F5																																			
+إدارية 2			F5																																			
+إدارية3			F6																																			
+إدارية 4			F6																																			
+إدارية 5			F9																																			
+إدارية 6			F9																																			
+إدارية 7	C6		C2				C8		C6								C7																					
+أحمد جمال الدين محمد	G1		G1		G1	G1	G1		G3	G1		G1	G5	G1	G1		G1		G1							C6										C7		
+أحمد محمد وهبة السيد	G1		G1		G1	G1	G1	G1	G3			G1	G5				G1	G1	G1	C7							A7		C7									
+أشرف أمين  الطحان	G2		G2		G2	G1	G2	G1	G4	G1	G1		G5	G1			G3	G1	G2							C8												
+ابراهيم احمد محمد السماحي	G2		G2		G2	G3	G2		G4	G1			G6				G3	G2	G2	C8						C7			C6						C8			
+بشارة إلياس حمدتو	G3		G3		G6	G3	G5		G5	G2					G1	G1	G4	G2	G3			C7				C6							A7					
+دانيال جوزيف إسبينا	G3		G3	G1	G6	G3	G5	G1	G5	G2	G1		G6		G1		G4	G4	G3																			
+سلطان عيادة ثاني الشمري	G6		G4		G7	G4	G6	G2	G6	G2			G6			G1	G5		G4						C9								A7					C6
+سمير هاشم هاشم خليفة	G6		G4	G1	G7	G4	G6	G2	G6	G3	G1	G1	G7		G2	G1	G5		G4																			
+عبد القادر الأمين الأمين	G7		G5	G1	G8		G7	G2	G7				G7				G6		G5	C9					C8		A7	C8	C7									
+عدنان فارس مزهي العنزي	G7		G5	G2	G8		G7	G3	G7				G7	G1			G6			C7		C8			C9	C9			C6									
+علي  حسين عبد المجيد محمد	H3		G6	G2	H1		H2	G3	G8			G3	G8		G2	G4	G7									C7		C9		C6								
+عماد محمد محمد عبد التواب	H3		G6	G2	H1		H2	G3	G8	G3	G2		G8		G2		G7								C8	C8						C9						
+عمر محمد فضل المولى سعيد	H4		G7	G3	H2		H3	G4	H1	G3	G2		G8		G3		G8					C8		C7												C7		
+عمرو محمود عبد الدايم محمد	H4		G7	G3	H2		H3	G4	H1		G2		H1			G4	G8											C9				C8			C9			C8
+كريم محمد عبدالهادي	H5		G8	G3	H4		H4	G4	H3	G4	G3		H1			G4	H1									C6			C6						C8			
+محمد السيد مصطفى عبد العال	H5	G1	G8	G5	H4	G4	H4	G7	H3	G4			H2				H1			C8						C7			C7									
+محمد محمود ابراهيم هلال	H6	G1	H1	G5			H5	G7	H4	G4			H2				H3											C8				C8				C7		C9
+محمد مصطفى محمود سلطان	H6	G1	H1	G5	H4		H5	G7	H4	G7	G3		H3				H3											C9					A7					C6
+موسي عبدالفتاح موسي حسن	H7	G2	H2	G6	H5		H6	G8	H5	G7			H3				H6					C7		C6	C9	C6												
+نداء هزاع نداء الشمرى	H7	G2	H2	G6	H5		H6	G8	H5	G7		G3	H4		G3		H6								C8	C8												
+ولاء عطية الدسوقي عسكر	H8	G2	H4	G6	H5		H7	G8	H6		G3	G3	H4		G3		H7	G4	G5																			
+صلاح علوي حسين الشرفي	H8		H4				H7		H8								H7															C6						
+مطارد دخيل ناصر العنزي			H5				H8																															
+اياد الناجي			H5				H8															C7																
+احمد بسيوني			H7																															C6				
+اداري ا			H7																																			
+نهى مرعي 																																						
+وفاء فايز																									D8													
+رباب صبري																																F9						
+وائل العنزي																																				C8		`;
+
+        function parseTabDelimitedData(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split('\t');
+            const result = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split('\t');
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = values[j] || '';
+                }
+                result.push(obj);
+            }
+            return result;
+        }
+
+        function displayCurrentDate() {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = today.toLocaleDateString('ar-SA', options);
+        }
+
+        function switchTab(tab) {
+            const buttons = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            if (tab === 'monitor') {
+                buttons[0].classList.add('active');
+                document.getElementById('monitorTab').classList.add('active');
+            } else if (tab === 'committee') {
+                buttons[1].classList.add('active');
+                document.getElementById('committeeTab').classList.add('active');
+            } else if (tab === 'statistics') {
+                buttons[2].classList.add('active');
+                document.getElementById('statisticsTab').classList.add('active');
+                loadStatistics();
+            }
+        }
+
+        function transformData(rawData) {
+            const transformed = [];
+            rawData.forEach(monitorData => {
+                const monitorName = monitorData['المراقب'];
+                Object.keys(monitorData).forEach(key => {
+                    if (key !== 'المراقب' && monitorData[key] && monitorData[key].trim() !== '') {
+                        transformed.push({
+                            monitor: monitorName,
+                            period: key,
+                            room: monitorData[key]
+                        });
+                    }
+                });
+            });
+            return transformed;
+        }
+
+        function loadData() {
+            try {
+                const rawData = parseTabDelimitedData(RAW_DATA_TEXT);
+                data = transformData(rawData);
+                populateMonitors();
+                populatePeriods();
+                updateDashboardStats();
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+            }
+        }
+
+        function updateDashboardStats() {
+            const monitors = new Set(data.map(item => item.monitor));
+            const periods = new Set(data.map(item => item.period));
+            const rooms = new Set(data.map(item => item.room));
+            
+            document.getElementById('totalMonitors').textContent = monitors.size;
+            document.getElementById('totalPeriods').textContent = periods.size;
+            document.getElementById('totalRooms').textContent = rooms.size;
+            document.getElementById('totalAssignments').textContent = data.length;
+        }
+
+        function loadStatistics() {
+            generateDetailedStats();
+            generateTopMonitors();
+            generateTopRooms();
+        }
+
+        function generateDetailedStats() {
+            const monitors = new Set(data.map(item => item.monitor));
+            const periods = new Set(data.map(item => item.period));
+            const rooms = new Set(data.map(item => item.room));
+            
+            const morningPeriods = data.filter(item => item.period.includes('الأولى')).length;
+            const eveningPeriods = data.filter(item => item.period.includes('الثانية')).length;
+            const afternoonPeriods = data.filter(item => item.period.match(/\d+\(.*\)/)).length;
+            
+            const html = `
+                <div class="stat-item">
+                    <span>📌 إجمالي المراقبين النشطين</span>
+                    <strong style="color: #2563eb;">${monitors.size} مراقب/ة</strong>
+                </div>
+                <div class="stat-item">
+                    <span>🌅 فترات صباحية (الأولى)</span>
+                    <strong style="color: #10b981;">${morningPeriods} مهمة</strong>
+                </div>
+                <div class="stat-item">
+                    <span>🌆 فترات صباحية (الثانية)</span>
+                    <strong style="color: #f59e0b;">${eveningPeriods} مهمة</strong>
+                </div>
+                <div class="stat-item">
+                    <span>🌙 فترات مسائية</span>
+                    <strong style="color: #8b5cf6;">${afternoonPeriods} مهمة</strong>
+                </div>
+                <div class="stat-item">
+                    <span>🏫 إجمالي القاعات المستخدمة</span>
+                    <strong style="color: #ec4899;">${rooms.size} قاعة</strong>
+                </div>
+                <div class="stat-item">
+                    <span>📊 متوسط المهام لكل مراقب</span>
+                    <strong style="color: #06b6d4;">${(data.length / monitors.size).toFixed(1)} مهمة</strong>
+                </div>
+            `;
+            document.getElementById('detailedStats').innerHTML = html;
+        }
+
+        function generateTopMonitors() {
+            const monitorCounts = {};
+            data.forEach(item => {
+                monitorCounts[item.monitor] = (monitorCounts[item.monitor] || 0) + 1;
+            });
+            
+            const sorted = Object.entries(monitorCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            const maxCount = sorted[0]?.[1] || 1;
+            
+            let html = '';
+            sorted.forEach(([monitor, count], index) => {
+                const percentage = (count / maxCount) * 100;
+                const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `${index + 1}.`;
+                html += `
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>${medal} ${monitor}</span>
+                            <strong style="color: #2563eb;">${count} مهمة</strong>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%">
+                                ${percentage.toFixed(0)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('topMonitors').innerHTML = html;
+        }
+
+        function generateTopRooms() {
+            const roomCounts = {};
+            data.forEach(item => {
+                roomCounts[item.room] = (roomCounts[item.room] || 0) + 1;
+            });
+            
+            const sorted = Object.entries(roomCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 15);
+            
+            const maxCount = sorted[0]?.[1] || 1;
+            
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">';
+            sorted.forEach(([room, count]) => {
+                const percentage = (count / maxCount) * 100;
+                html += `
+                    <div style="background: #0f172a; padding: 1rem; border-radius: 8px; border: 1px solid #334155;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong style="color: #2563eb; font-size: 1.2rem;">قاعة ${room}</strong>
+                            <span style="color: #10b981;">${count}</span>
+                        </div>
+                        <div class="progress-bar" style="height: 8px;">
+                            <div class="progress-fill" style="width: ${percentage}%; padding: 0;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('topRooms').innerHTML = html;
+        }
+
+        function populateMonitors() {
+            const monitors = [...new Set(data.map(item => item.monitor))].filter(m => m).sort();
+            const monitorSelect = document.getElementById('monitorSelect');
+            const committeeMonitorSelect = document.getElementById('committeeMonitorSelect');
+            monitors.forEach(monitor => {
+                const option1 = document.createElement('option');
+                option1.value = monitor;
+                option1.textContent = monitor;
+                monitorSelect.appendChild(option1);
+                const option2 = document.createElement('option');
+                option2.value = monitor;
+                option2.textContent = monitor;
+                committeeMonitorSelect.appendChild(option2);
+            });
+        }
+
+        function populatePeriods() {
+            const periods = [...new Set(data.map(item => item.period))].filter(p => p).sort();
+            const periodSelect = document.getElementById('periodSelect');
+            periods.forEach(period => {
+                const option = document.createElement('option');
+                option.value = period;
+                option.textContent = period;
+                periodSelect.appendChild(option);
+            });
+        }
+
+        function loadMonitorSchedule() {
+            const selectedMonitor = document.getElementById('monitorSelect').value;
+            const resultDiv = document.getElementById('monitorResult');
+            if (!selectedMonitor) {
+                resultDiv.innerHTML = '';
+                return;
+            }
+            const schedule = data.filter(item => item.monitor === selectedMonitor);
+            if (schedule.length === 0) {
+                resultDiv.innerHTML = '<div class="card"><div class="no-data">لا توجد فترات مراقبة لهذا المراقب</div></div>';
+                return;
+            }
+            let html = `<div class="card"><h2 style="color: #2563eb; margin-bottom: 1.5rem;">جدول المراقب: ${selectedMonitor}</h2><table><thead><tr><th>الفترة</th><th>القاعة</th></tr></thead><tbody>`;
+            schedule.forEach(item => {
+                html += `<tr><td>${item.period}</td><td>${item.room}</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            resultDiv.innerHTML = html;
+        }
+
+        function searchCommittee() {
+            const period = document.getElementById('periodSelect').value;
+            const room = document.getElementById('roomInput').value.trim();
+            const monitor = document.getElementById('committeeMonitorSelect').value;
+            let results = data;
+            if (period) results = results.filter(item => item.period === period);
+            if (room) results = results.filter(item => item.room.toString().includes(room));
+            if (monitor) results = results.filter(item => item.monitor === monitor);
+            displayCommitteeResults(results);
+        }
+
+        function displayCommitteeResults(results) {
+            const resultDiv = document.getElementById('committeeResult');
+            if (results.length === 0) {
+                resultDiv.innerHTML = '<div class="card"><div class="no-data">لا توجد نتائج مطابقة للبحث</div></div>';
+                return;
+            }
+            let html = `<div class="card"><h2 style="color: #2563eb; margin-bottom: 1.5rem;">نتائج البحث (${results.length} نتيجة)</h2><table><thead><tr><th>الفترة</th><th>القاعة</th><th>المراقب</th></tr></thead><tbody>`;
+            results.forEach(item => {
+                html += `<tr><td>${item.period}</td><td>${item.room}</td><td>${item.monitor}</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            resultDiv.innerHTML = html;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            displayCurrentDate();
+            loadData();
+        });
+    </script>
+</body>
+</html>
