@@ -95,19 +95,18 @@
 
     <!-- Babel for JSX compilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        import React, { useState, useMemo, useEffect } from 'react';
+        import React, { useState, useMemo, useEffect, useRef } from 'react';
         import { createRoot } from 'react-dom/client';
         import { 
           Users, BookOpen, LayoutDashboard, Search, 
           ChevronLeft, ChevronRight, Moon, Sun, 
           UserCheck, Calendar, ArrowRight, Award, Briefcase, 
-          BarChart3, AlertTriangle, Shield 
+          BarChart3, AlertTriangle, Shield, Network 
         } from 'lucide-react';
 
         // --- DATA CONSTANTS ---
@@ -300,6 +299,12 @@
                         label="الرئيسية" 
                     />
                     <NavButton 
+                        active={activeTab === 'matrix'} 
+                        onClick={() => { setActiveTab('matrix'); onClearSelection(); }} 
+                        icon={<Network size={20} />} 
+                        label="مصفوفة التدريب" 
+                    />
+                    <NavButton 
                         active={activeTab === 'courses' || selectedCourseId !== null} 
                         onClick={() => setActiveTab('courses')} 
                         icon={<BookOpen size={20} />} 
@@ -342,7 +347,7 @@
         const Dashboard = ({ totalEmployees, totalCourses, totalDepts, courses, onViewAllCourses }) => {
             return (
                 <div className="space-y-8 animate-enter max-w-5xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <StatCard 
                             title="إجمالي الموظفين" 
                             value={totalEmployees} 
@@ -358,6 +363,21 @@
                             value={totalDepts} 
                             icon={<LayoutDashboard className="text-primary" />} 
                         />
+
+                        <a 
+                          href="https://nre-nec.com/clips/enfoCour251.html"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-light-border dark:border-dark-border flex items-center justify-between hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
+                        >
+                             <div>
+                               <p className="text-sm text-gray-500 mb-1">رابط خارجي</p>
+                               <h3 className="text-2xl font-bold text-primary group-hover:underline">المصفوفة</h3>
+                             </div>
+                             <div className="p-4 bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                               <Network size={24} />
+                             </div>
+                        </a>
                     </div>
 
                     <div className="bg-light-card dark:bg-dark-card rounded-2xl p-6 border border-light-border dark:border-dark-border">
@@ -563,6 +583,266 @@
             );
         };
 
+        const TrainingMatrix = ({ courses }) => {
+          const [activeCourseId, setActiveCourseId] = useState(null);
+          const [lockedCourseId, setLockedCourseId] = useState(null);
+          const [connections, setConnections] = useState([]);
+          
+          const deptRefs = useRef(new Map());
+          const courseRefs = useRef(new Map());
+          const svgRef = useRef(null);
+
+          const normalizeText = (text) => {
+            return text.trim()
+              .replace("الأتصالات", "الاتصالات")
+              .replace("العلاقات العامه", "العلاقات العامة")
+              .replace("الكادر الاكاديمي", "الكادر الأكاديمي")
+              .replace("اخصائي", "أخصائي");
+          };
+
+          const departments = useMemo(() => {
+            const depts = new Set();
+            courses.forEach(c => {
+              c.targets.forEach(t => depts.add(normalizeText(t)));
+            });
+            return Array.from(depts).filter(d => d !== 'الكل').sort();
+          }, [courses]);
+
+          const drawConnections = () => {
+            const targetId = lockedCourseId || activeCourseId;
+            if (!targetId) {
+              setConnections([]);
+              return;
+            }
+
+            const course = courses.find(c => c.id === targetId);
+            if (!course) return;
+
+            const courseElem = courseRefs.current.get(targetId);
+            const svgElem = svgRef.current;
+            
+            if (!courseElem || !svgElem) return;
+
+            const newConnections = [];
+            const courseRect = courseElem.getBoundingClientRect();
+            const svgRect = svgElem.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 900;
+
+            let startX, startY;
+            if (isMobile) {
+              startX = courseRect.left + (courseRect.width / 2) - svgRect.left;
+              startY = courseRect.top - svgRect.top; 
+            } else {
+              startX = courseRect.right - svgRect.left;
+              startY = courseRect.top + (courseRect.height / 2) - svgRect.top;
+            }
+
+            const isAll = course.targets.includes('الكل');
+
+            departments.forEach(dept => {
+              const isTarget = isAll || course.targets.some(t => normalizeText(t) === dept);
+              
+              if (isTarget) {
+                const deptElem = deptRefs.current.get(dept);
+                if (deptElem) {
+                  const deptRect = deptElem.getBoundingClientRect();
+                  let endX, endY;
+
+                  if (isMobile) {
+                     endX = deptRect.left + (deptRect.width / 2) - svgRect.left;
+                     endY = deptRect.bottom - svgRect.top + 2;
+                  } else {
+                     endX = deptRect.left - svgRect.left - 2;
+                     endY = deptRect.top + (deptRect.height / 2) - svgRect.top;
+                  }
+
+                  let d = "";
+                  if (isMobile) {
+                      const dy = Math.abs(startY - endY);
+                      const cpOffset = dy * 0.5;
+                      d = `M ${startX} ${startY} C ${startX} ${startY - cpOffset}, ${endX} ${endY + cpOffset}, ${endX} ${endY}`;
+                  } else {
+                      const dx = Math.abs(startX - endX);
+                      const cpOffset = dx * 0.5;
+                      d = `M ${startX} ${startY} C ${startX + cpOffset} ${startY}, ${endX - cpOffset} ${endY}, ${endX} ${endY}`;
+                  }
+                  newConnections.push(d);
+                }
+              }
+            });
+
+            setConnections(newConnections);
+          };
+
+          useEffect(() => {
+            drawConnections();
+            window.addEventListener('resize', drawConnections);
+            window.addEventListener('scroll', drawConnections);
+            
+            return () => {
+              window.removeEventListener('resize', drawConnections);
+              window.removeEventListener('scroll', drawConnections);
+            };
+          }, [activeCourseId, lockedCourseId]);
+
+          const handleCourseClick = (id) => {
+            if (lockedCourseId === id) {
+              setLockedCourseId(null);
+            } else {
+              setLockedCourseId(id);
+              setActiveCourseId(id);
+            }
+          };
+
+          const handleBgClick = () => {
+            setLockedCourseId(null);
+          };
+
+          const styles = `
+            .matrix-container {
+              --primary-purple: #5A2A82;
+              --primary-lime: #b5c42e;
+            }
+            .connector-path {
+                fill: none;
+                stroke: var(--primary-lime);
+                stroke-width: 2.5px;
+                stroke-linecap: round;
+                opacity: 0.8;
+                marker-end: url(#arrowhead);
+                animation: draw 0.4s ease-out forwards;
+            }
+            @keyframes draw {
+                from { opacity: 0; stroke-width: 0; }
+                to { opacity: 0.8; stroke-width: 2.5px; }
+            }
+            .dept-tag.active {
+                background: var(--primary-purple);
+                color: white;
+                border-color: var(--primary-purple);
+                font-weight: bold;
+                transform: scale(1.05);
+                box-shadow: 0 2px 8px rgba(90, 42, 130, 0.3);
+            }
+            .course-card.active, .course-card.locked {
+                border-right-color: var(--primary-lime);
+                background: #fcfcfc;
+                transform: translateX(-5px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+            .course-card.locked {
+                border-color: var(--primary-purple);
+                border-width: 1px 4px 1px 1px;
+            }
+          `;
+
+          return (
+            <div 
+              className="matrix-container relative min-h-screen bg-[#f0f2f5] p-4 md:p-8 animate-enter text-[#333] dir-rtl"
+              onClick={handleBgClick}
+              style={{
+                backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(181, 196, 46, 0.1) 0%, rgba(90, 42, 130, 0.05) 90%)'
+              }}
+            >
+              <style>{styles}</style>
+              
+              <svg 
+                ref={svgRef}
+                className="absolute top-0 left-0 w-full h-full pointer-events-none z-10"
+                style={{ overflow: 'visible' }}
+              >
+                <defs>
+                    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5"
+                        markerWidth="5" markerHeight="5" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#b5c42e" />
+                    </marker>
+                </defs>
+                {connections.map((d, i) => (
+                  <path key={i} d={d} className="connector-path" />
+                ))}
+              </svg>
+
+              <div className="relative z-20 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8 md:gap-16">
+                
+                <section>
+                  <div className="bg-white/80 backdrop-blur inline-block px-4 py-2 rounded-lg border-r-4 border-[#b5c42e] mb-6 shadow-sm">
+                    <h2 className="text-[#5A2A82] font-bold">الإدارات المستهدفة</h2>
+                  </div>
+                  <div className="flex flex-wrap lg:flex-col gap-3 justify-center lg:justify-start">
+                    {departments.map(dept => {
+                       const targetId = lockedCourseId || activeCourseId;
+                       let isActive = false;
+                       if (targetId) {
+                         const course = courses.find(c => c.id === targetId);
+                         if (course) {
+                           isActive = course.targets.includes('الكل') || course.targets.some(t => normalizeText(t) === dept);
+                         }
+                       }
+
+                       return (
+                        <div
+                          key={dept}
+                          ref={el => { if (el) deptRefs.current.set(dept, el); }}
+                          data-name={dept}
+                          className={`
+                            dept-tag px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm cursor-default transition-all duration-200 text-center relative z-20
+                            ${isActive ? 'active' : 'opacity-100'}
+                            ${(targetId && !isActive) ? 'opacity-30' : ''}
+                          `}
+                        >
+                          {dept}
+                        </div>
+                       );
+                    })}
+                  </div>
+                </section>
+
+                <section>
+                  <div className="flex items-center justify-between mb-6 bg-white/80 backdrop-blur px-4 py-2 rounded-lg border-r-4 border-[#b5c42e] shadow-sm">
+                    <h2 className="text-[#5A2A82] font-bold">الدورات التدريبية</h2>
+                    <span className="text-xs text-gray-500 hidden md:block">💡 اضغط على الدورة لتثبيت الأسهم</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {courses.map(course => {
+                      const isActive = activeCourseId === course.id;
+                      const isLocked = lockedCourseId === course.id;
+                      
+                      return (
+                        <div
+                          key={course.id}
+                          ref={el => { if (el) courseRefs.current.set(course.id, el); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCourseClick(course.id);
+                          }}
+                          onMouseEnter={() => !lockedCourseId && setActiveCourseId(course.id)}
+                          onMouseLeave={() => !lockedCourseId && setActiveCourseId(null)}
+                          className={`
+                            course-card bg-white p-4 rounded-xl border-r-4 border-gray-200 shadow-sm cursor-pointer flex items-center gap-3 transition-all duration-200 relative z-20
+                            ${isActive ? 'active' : ''}
+                            ${isLocked ? 'locked' : ''}
+                          `}
+                        >
+                          <div className="text-[#5A2A82]">
+                            <course.icon size={24} />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-gray-700 leading-tight">
+                              {course.title}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">{course.duration}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+            </div>
+          );
+        };
+
         function App() {
             const [activeTab, setActiveTab] = useState('dashboard');
             const [selectedCourse, setSelectedCourse] = useState(null);
@@ -625,7 +905,7 @@
                         />
 
                         {/* Main Content */}
-                        <main className="flex-1 p-4 md:p-8 pb-24 md:pb-8 overflow-y-auto">
+                        <main className={`flex-1 overflow-y-auto ${activeTab === 'matrix' ? 'p-0' : 'p-4 md:p-8 pb-24 md:pb-8'}`}>
                             
                             {activeTab === 'dashboard' && !selectedCourse && (
                                 <Dashboard 
@@ -635,6 +915,10 @@
                                     courses={COURSES}
                                     onViewAllCourses={() => setActiveTab('courses')}
                                 />
+                            )}
+
+                            {activeTab === 'matrix' && !selectedCourse && (
+                                <TrainingMatrix courses={COURSES} />
                             )}
 
                             {activeTab === 'courses' && !selectedCourse && (
@@ -669,6 +953,5 @@
         const root = createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
