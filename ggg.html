@@ -1,158 +1,957 @@
-import { 
-  Users, BookOpen, Award, Briefcase, 
-  BarChart3, AlertTriangle, Shield 
-} from 'lucide-react';
-import { Employee, Course } from './types';
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>بوابة التدريب والتطوير - شركة الشمال</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Cairo', 'sans-serif'],
+              number: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                DEFAULT: '#5A2A82',
+                50: '#F5F0F9',
+                100: '#EBE0F3',
+                200: '#D6C2E6',
+                300: '#C2A3D9',
+                400: '#AD85CC',
+                500: '#5A2A82',
+                600: '#482268',
+                700: '#36194E',
+                800: '#241134',
+                900: '#12081A',
+              },
+              dark: {
+                bg: '#1a141e',
+                card: '#252029',
+                border: '#38323f'
+              },
+              light: {
+                bg: '#FFFFFF',
+                card: '#F2F2F7',
+                border: '#E5E5EA'
+              }
+            }
+          }
+        }
+      }
+    </script>
 
-export const RAW_EMPLOYEES: Employee[] = [
-  { id: 'B060', name: 'مشاري خالد رجا العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
-  { id: 'B064', name: 'مشاري نهار مناحي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
-  { id: 'B089', name: 'زيدان فاحس خشان الصقري', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
-  { id: 'B069', name: 'عبدالله فتحى محمد طاش', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B082', name: 'محمد سعيد فؤاد شويخ', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B092', name: 'عبد العظيم ابراهيم حسين حميدو', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B0115', name: 'حازم محمد فهمى عبده', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B0167', name: 'احمد عجب هجاج الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B0178', name: 'محمد ابراهيم مهنا محمد', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B0180', name: 'محمد سيد محمد حسنين', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
-  { id: 'B010', name: 'اسامة زيد نزال العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الشؤون القانونية', unit: 'الشؤون القانونية' },
-  { id: 'B0165', name: 'احمد صبحى ابراهيم الدمرداش', nationality: 'مصرى', gender: 'ذكر', dept: 'الشؤون القانونية', unit: 'الشؤون القانونية' },
-  { id: 'B0114', name: 'عامر بن هوجاس بن الاقعس الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0145', name: 'عبد الله وحش دوحان سلطان', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0147', name: 'فائز ثانى دوشان العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0146', name: 'عبد الرحمن شرف حسن الجعدي', nationality: 'يمني', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0148', name: 'خالد عبد الله عبد اله سعد', nationality: 'سوداني', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0149', name: 'محمد راضي محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0150', name: 'فارس الطرقى بن الاسود العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B0166', name: 'منيف بن نفاع على الدهمشي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
-  { id: 'B035', name: 'أشواق نايف الصقرى', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B015', name: 'مرام جزاء طراد العنزى', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B023', name: 'فاتن شلاش محمد الرويلي', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B097', name: 'ملاك نادي بردان الرويلي', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B094', name: 'خالد محمد محمود عبد القادر', nationality: 'مصرى', gender: 'ذكر', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B0159', name: 'يوسف شحات يوسف رضوان', nationality: 'مصرى', gender: 'ذكر', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
-  { id: 'B012', name: 'عايده حمد سليمان العايدي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B028', name: 'جواهر خالد علي الخالدى', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B063', name: 'متعب عمري رحيل العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B093', name: 'مليحه حميد ظاهر العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B0119', name: 'وتين عوض مطر العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B0131', name: 'حلى سالم فياض العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B0144', name: 'ريم عقيل خضير العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B0152', name: 'مضاوي منيف سالم العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
-  { id: 'B009', name: 'نوف على ابراهيم الفالح', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B037', name: 'ونيس مجنان حاوى العنزى', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B039', name: 'عبدالله سعود محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B045', name: 'جمال منصور الشملاني العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B049', name: 'ياسمين منور ماشي العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B081', name: 'مشاري ناظم نواف سليمان', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B0136', name: 'فضيله كمال رحيل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B007', name: 'سلطانه فرحان هجرس الديدب', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B013', name: 'محمد راضي صلبي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B020', name: 'جميلة مغير رافع العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B044', name: 'امل فراج نهير العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B062', name: 'معالي نافل مهلهل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B0125', name: 'فاديا مجاهد سلطان العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B0179', name: 'عبدالله بن سالم العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
-  { id: 'B006', name: 'مناحي محمد هليل العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B075', name: 'امل عبدالله مليح العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B077', name: 'نايفه معطش صياح العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0102', name: 'حمود عايد عساج العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0109', name: 'عفاف عامر بن حمد العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0110', name: 'فائزه هليل بن حسين العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0134', name: 'عبدالله خالد سلامه العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0140', name: 'ضاري منصور شيتوي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0142', name: 'مشاري حسين صغير الربيعيه الشمري', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0153', name: 'محسن عايد على الشمرى', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0154', name: 'بدر عيد البطحي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0155', name: 'يونس راضي صلبي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0156', name: 'نواف سليمان الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0157', name: 'وليد راضي مشوح العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0158', name: 'فيصل عطا الله عبد الله الهزيمي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0164', name: 'عبدالله بن شمات الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0169', name: 'محمد بن شمات الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0170', name: 'عبدالهادي احمد الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0171', name: 'تركي بن بدر الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0173', name: 'ماجد بن عبدالله الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0174', name: 'عبدالمجيد بن محمد حامد الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
-  { id: 'B046', name: 'عبد الله احمد محمد جمعه', nationality: 'سوداني', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
-  { id: 'B076', name: 'عواطف نداء مزعل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
-  { id: 'B079', name: 'جابر مسعودعبيد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
-  { id: 'B0176', name: 'فهيد بن ملهي الدغماني الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
-  { id: 'A012', name: 'شاداب قمر الطاف حسين', nationality: 'هندي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B003', name: 'ياسر هويدي محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B068', name: 'إيثار عوض مديح الحربي', nationality: 'سعودي', gender: 'أنثى', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B0106', name: 'أزهار الدين أنصاري', nationality: 'هندي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B083', name: 'محمود احمد محمد سلام', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B0117', name: 'يوسف حامد احمد بدر الدين', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B0168', name: 'مصطفى محمد مصطفى غنيم', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B0172', name: 'علي بن وادي الشدادي العتيبي', nationality: 'سعودي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B0175', name: 'وهج فلاح سالم الحربي', nationality: 'سعودي', gender: 'أنثى', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
-  { id: 'B031', name: 'احمد حابس مجاهد العنزى', nationality: 'سعودي', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
-  { id: 'B0161', name: 'سلطان حميد محمد الشمري', nationality: 'سعودي', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
-  { id: 'B034', name: 'مصطفى عبدالجواد فرحات مغيزل', nationality: 'مصرى', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
-  { id: 'B066', name: 'وطن شافي فاحس الصقري', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
-  { id: 'B088', name: 'فاطمه حوري مزلوه العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
-  { id: 'B0160', name: 'محمد ابراهيم محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
-  { id: 'B0163', name: 'أنوار خليف العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
-  { id: 'B095', name: 'احمد وجيه يوسف نوفل', nationality: 'أردني', gender: 'ذكر', dept: 'المراجعة الداخلية', unit: 'المراجعة الداخلية' },
-  { id: 'B0101', name: 'محمود محمد محمد فتح الد محمد', nationality: 'مصرى', gender: 'ذكر', dept: 'إدارة المشتريات', unit: 'إدارة المشتريات' },
-];
+    <!-- Styles -->
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #D6C2E6;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #38323f;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #5A2A82;
+      }
 
-export const COURSES: Course[] = [
-  {
-    id: 1,
-    title: 'فن خدمة العملاء',
-    duration: '5 أيام',
-    targets: ['العلاقات العامه', 'وحدة القبول والتسجيل', 'أمناء المعامل', 'وحدة الشؤون المالية /التحصيل', 'أخصائي التمريض'],
-    description: 'تطوير مهارات التعامل مع الجمهور وتحسين تجربة المستفيدين.',
-    icon: Users
-  },
-  {
-    id: 2,
-    title: 'تحقيق الريادة والتميز الإداري',
-    duration: '3 ساعات',
-    targets: ['الإدارة التنفيذية', 'الإدارة المالية', 'الأتصالات الإدارية والسكرتارية', 'الشؤون القانونية', 'العلاقات العامه', 'الموارد البشرية', 'إدارة المشتريات', 'إدارة كلية التمريض'],
-    description: 'استراتيجيات القيادة الحديثة وصنع القرار المؤسسي.',
-    icon: Award
-  },
-  {
-    id: 3,
-    title: 'تنمية وصقل مهارات سكرتارية وفق منهج كايزن',
-    duration: '3 أيام',
-    targets: ['الأتصالات الإدارية والسكرتارية', 'وحدة القبول والتسجيل', 'الإدارة التنفيذية', 'وحدة الشؤون المالية /التحصيل', 'الموارد البشرية'],
-    description: 'تطبيق منهجية كايزن اليابانية في تنظيم الأعمال المكتبية.',
-    icon: Briefcase
-  },
-  {
-    id: 4,
-    title: 'كتابة التقارير الإدارية',
-    duration: '3 ساعات',
-    targets: ['الإدارة التنفيذية', 'الإدارة المالية', 'الأتصالات الإدارية والسكرتارية', 'الموارد البشرية', 'العلاقات العامه', 'المراجعة الداخلية', 'إدارة المشتريات', 'إدارة كلية التمريض', 'تقنية المعلومات', 'وحدة الشؤون المالية /التحصيل', 'وحدة القبول والتسجيل', 'الكادر الاكاديمي'],
-    description: 'أسس الكتابة الإدارية وصياغة التقارير والمخاطبات الرسمية.',
-    icon: BookOpen
-  },
-  {
-    id: 5,
-    title: 'إعداد الخطط والتقارير المالية',
-    duration: '3 أيام',
-    targets: ['الإدارة المالية', 'وحدة الشؤون المالية /التحصيل', 'المراجعة الداخلية', 'إدارة المشتريات'],
-    description: 'تطوير المهارات المالية والمحاسبية وإعداد الموازنات.',
-    icon: BarChart3
-  },
-  {
-    id: 6,
-    title: 'ورشة مكافحة الحرائق واستخدام الطفايات',
-    duration: '3 ساعات',
-    targets: ['الكل'],
-    description: 'أساسيات السلامة العامة واستخدام طفايات الحريق.',
-    icon: AlertTriangle
-  },
-  {
-    id: 7,
-    title: 'السلام والصحة المهنية OSHA',
-    duration: '3 ساعات',
-    targets: ['الخدمات المساندة', 'الصيانة', 'إدارة كلية التمريض', 'كلية التمريض', 'أمناء المعامل', 'اخصائي تمريض', 'طبيبة'],
-    description: 'معايير الأوشا العالمية للسلامة والصحة المهنية.',
-    icon: Shield
+      @keyframes enter {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-enter {
+        animation: enter 0.4s ease-out;
+      }
+    </style>
+
+    <!-- Import Map for React and Libraries -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+    "lucide-react": "https://esm.sh/lucide-react@0.292.0?deps=react@18.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
   }
-];
+}
+</script>
+
+    <!-- Babel for JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useMemo, useEffect, useRef } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { 
+          Users, BookOpen, LayoutDashboard, Search, 
+          ChevronLeft, ChevronRight, Moon, Sun, 
+          UserCheck, Calendar, ArrowRight, Award, Briefcase, 
+          BarChart3, AlertTriangle, Shield, Network 
+        } from 'lucide-react';
+
+        // --- DATA CONSTANTS ---
+        const RAW_EMPLOYEES = [
+            { id: 'B060', name: 'مشاري خالد رجا العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
+            { id: 'B064', name: 'مشاري نهار مناحي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
+            { id: 'B089', name: 'زيدان فاحس خشان الصقري', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة التنفيذية', unit: 'الإدارة التنفيذية' },
+            { id: 'B069', name: 'عبدالله فتحى محمد طاش', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B082', name: 'محمد سعيد فؤاد شويخ', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B092', name: 'عبد العظيم ابراهيم حسين حميدو', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B0115', name: 'حازم محمد فهمى عبده', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B0167', name: 'احمد عجب هجاج الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B0178', name: 'محمد ابراهيم مهنا محمد', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B0180', name: 'محمد سيد محمد حسنين', nationality: 'مصرى', gender: 'ذكر', dept: 'الإدارة المالية', unit: 'الإدارة المالية' },
+            { id: 'B010', name: 'اسامة زيد نزال العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الشؤون القانونية', unit: 'الشؤون القانونية' },
+            { id: 'B0165', name: 'احمد صبحى ابراهيم الدمرداش', nationality: 'مصرى', gender: 'ذكر', dept: 'الشؤون القانونية', unit: 'الشؤون القانونية' },
+            { id: 'B0114', name: 'عامر بن هوجاس بن الاقعس الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0145', name: 'عبد الله وحش دوحان سلطان', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0147', name: 'فائز ثانى دوشان العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0146', name: 'عبد الرحمن شرف حسن الجعدي', nationality: 'يمني', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0148', name: 'خالد عبد الله عبد اله سعد', nationality: 'سوداني', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0149', name: 'محمد راضي محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0150', name: 'فارس الطرقى بن الاسود العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B0166', name: 'منيف بن نفاع على الدهمشي', nationality: 'سعودي', gender: 'ذكر', dept: 'العلاقات العامه', unit: 'العلاقات العامه' },
+            { id: 'B035', name: 'أشواق نايف الصقرى', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B015', name: 'مرام جزاء طراد العنزى', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B023', name: 'فاتن شلاش محمد الرويلي', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B097', name: 'ملاك نادي بردان الرويلي', nationality: 'سعودي', gender: 'أنثى', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B094', name: 'خالد محمد محمود عبد القادر', nationality: 'مصرى', gender: 'ذكر', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B0159', name: 'يوسف شحات يوسف رضوان', nationality: 'مصرى', gender: 'ذكر', dept: 'الموارد البشرية', unit: 'الموارد البشرية' },
+            { id: 'B012', name: 'عايده حمد سليمان العايدي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B028', name: 'جواهر خالد علي الخالدى', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B063', name: 'متعب عمري رحيل العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B093', name: 'مليحه حميد ظاهر العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B0119', name: 'وتين عوض مطر العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B0131', name: 'حلى سالم فياض العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B0144', name: 'ريم عقيل خضير العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B0152', name: 'مضاوي منيف سالم العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الأتصالات الإدارية والسكرتارية', unit: 'إدارة كلية التمريض' },
+            { id: 'B009', name: 'نوف على ابراهيم الفالح', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B037', name: 'ونيس مجنان حاوى العنزى', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B039', name: 'عبدالله سعود محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B045', name: 'جمال منصور الشملاني العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B049', name: 'ياسمين منور ماشي العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B081', name: 'مشاري ناظم نواف سليمان', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B0136', name: 'فضيله كمال رحيل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة الشؤون المالية /التحصيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B007', name: 'سلطانه فرحان هجرس الديدب', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B013', name: 'محمد راضي صلبي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B020', name: 'جميلة مغير رافع العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B044', name: 'امل فراج نهير العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B062', name: 'معالي نافل مهلهل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B0125', name: 'فاديا مجاهد سلطان العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B0179', name: 'عبدالله بن سالم العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'وحدة القبول والتسجيل', unit: 'إدارة كلية التمريض' },
+            { id: 'B006', name: 'مناحي محمد هليل العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B075', name: 'امل عبدالله مليح العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B077', name: 'نايفه معطش صياح العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0102', name: 'حمود عايد عساج العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0109', name: 'عفاف عامر بن حمد العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0110', name: 'فائزه هليل بن حسين العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0134', name: 'عبدالله خالد سلامه العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0140', name: 'ضاري منصور شيتوي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0142', name: 'مشاري حسين صغير الربيعيه الشمري', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0153', name: 'محسن عايد على الشمرى', nationality: 'القبائل النازحة', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0154', name: 'بدر عيد البطحي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0155', name: 'يونس راضي صلبي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0156', name: 'نواف سليمان الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0157', name: 'وليد راضي مشوح العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0158', name: 'فيصل عطا الله عبد الله الهزيمي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0164', name: 'عبدالله بن شمات الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0169', name: 'محمد بن شمات الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0170', name: 'عبدالهادي احمد الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0171', name: 'تركي بن بدر الصقري العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0173', name: 'ماجد بن عبدالله الدهمشي العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0174', name: 'عبدالمجيد بن محمد حامد الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'الخدمات المساندة', unit: 'إدارة كلية التمريض' },
+            { id: 'B046', name: 'عبد الله احمد محمد جمعه', nationality: 'سوداني', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
+            { id: 'B076', name: 'عواطف نداء مزعل العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
+            { id: 'B079', name: 'جابر مسعودعبيد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
+            { id: 'B0176', name: 'فهيد بن ملهي الدغماني الرويلي', nationality: 'سعودي', gender: 'ذكر', dept: 'الصيانة', unit: 'إدارة كلية التمريض' },
+            { id: 'A012', name: 'شاداب قمر الطاف حسين', nationality: 'هندي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B003', name: 'ياسر هويدي محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B068', name: 'إيثار عوض مديح الحربي', nationality: 'سعودي', gender: 'أنثى', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B0106', name: 'أزهار الدين أنصاري', nationality: 'هندي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B083', name: 'محمود احمد محمد سلام', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B0117', name: 'يوسف حامد احمد بدر الدين', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B0168', name: 'مصطفى محمد مصطفى غنيم', nationality: 'مصرى', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B0172', name: 'علي بن وادي الشدادي العتيبي', nationality: 'سعودي', gender: 'ذكر', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B0175', name: 'وهج فلاح سالم الحربي', nationality: 'سعودي', gender: 'أنثى', dept: 'تقنية المعلومات', unit: 'تقنية المعلومات' },
+            { id: 'B031', name: 'احمد حابس مجاهد العنزى', nationality: 'سعودي', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
+            { id: 'B0161', name: 'سلطان حميد محمد الشمري', nationality: 'سعودي', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
+            { id: 'B034', name: 'مصطفى عبدالجواد فرحات مغيزل', nationality: 'مصرى', gender: 'ذكر', dept: 'كلية التمريض', unit: 'كلية التمريض' },
+            { id: 'B066', name: 'وطن شافي فاحس الصقري', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
+            { id: 'B088', name: 'فاطمه حوري مزلوه العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
+            { id: 'B0160', name: 'محمد ابراهيم محمد العنزي', nationality: 'سعودي', gender: 'ذكر', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
+            { id: 'B0163', name: 'أنوار خليف العنزي', nationality: 'سعودي', gender: 'أنثى', dept: 'إدارة كلية التمريض', unit: 'إدارة كلية التمريض' },
+            { id: 'B095', name: 'احمد وجيه يوسف نوفل', nationality: 'أردني', gender: 'ذكر', dept: 'المراجعة الداخلية', unit: 'المراجعة الداخلية' },
+            { id: 'B0101', name: 'محمود محمد محمد فتح الد محمد', nationality: 'مصرى', gender: 'ذكر', dept: 'إدارة المشتريات', unit: 'إدارة المشتريات' },
+        ];
+
+        const COURSES = [
+            {
+                id: 1,
+                title: 'فن خدمة العملاء',
+                duration: '5 أيام',
+                targets: ['العلاقات العامه', 'وحدة القبول والتسجيل', 'أمناء المعامل', 'وحدة الشؤون المالية /التحصيل', 'أخصائي التمريض'],
+                description: 'تطوير مهارات التعامل مع الجمهور وتحسين تجربة المستفيدين.',
+                icon: Users
+            },
+            {
+                id: 2,
+                title: 'تحقيق الريادة والتميز الإداري',
+                duration: '3 ساعات',
+                targets: ['الإدارة التنفيذية', 'الإدارة المالية', 'الأتصالات الإدارية والسكرتارية', 'الشؤون القانونية', 'العلاقات العامه', 'الموارد البشرية', 'إدارة المشتريات', 'إدارة كلية التمريض'],
+                description: 'استراتيجيات القيادة الحديثة وصنع القرار المؤسسي.',
+                icon: Award
+            },
+            {
+                id: 3,
+                title: 'تنمية وصقل مهارات سكرتارية وفق منهج كايزن',
+                duration: '3 أيام',
+                targets: ['الأتصالات الإدارية والسكرتارية', 'وحدة القبول والتسجيل', 'الإدارة التنفيذية', 'وحدة الشؤون المالية /التحصيل', 'الموارد البشرية'],
+                description: 'تطبيق منهجية كايزن اليابانية في تنظيم الأعمال المكتبية.',
+                icon: Briefcase
+            },
+            {
+                id: 4,
+                title: 'كتابة التقارير الإدارية',
+                duration: '3 ساعات',
+                targets: ['الإدارة التنفيذية', 'الإدارة المالية', 'الأتصالات الإدارية والسكرتارية', 'الموارد البشرية', 'العلاقات العامه', 'المراجعة الداخلية', 'إدارة المشتريات', 'إدارة كلية التمريض', 'تقنية المعلومات', 'وحدة الشؤون المالية /التحصيل', 'وحدة القبول والتسجيل', 'الكادر الاكاديمي'],
+                description: 'أسس الكتابة الإدارية وصياغة التقارير والمخاطبات الرسمية.',
+                icon: BookOpen
+            },
+            {
+                id: 5,
+                title: 'إعداد الخطط والتقارير المالية',
+                duration: '3 أيام',
+                targets: ['الإدارة المالية', 'وحدة الشؤون المالية /التحصيل', 'المراجعة الداخلية', 'إدارة المشتريات'],
+                description: 'تطوير المهارات المالية والمحاسبية وإعداد الموازنات.',
+                icon: BarChart3
+            },
+            {
+                id: 6,
+                title: 'ورشة مكافحة الحرائق واستخدام الطفايات',
+                duration: '3 ساعات',
+                targets: ['الكل'],
+                description: 'أساسيات السلامة العامة واستخدام طفايات الحريق.',
+                icon: AlertTriangle
+            },
+            {
+                id: 7,
+                title: 'السلام والصحة المهنية OSHA',
+                duration: '3 ساعات',
+                targets: ['الخدمات المساندة', 'الصيانة', 'إدارة كلية التمريض', 'كلية التمريض', 'أمناء المعامل', 'اخصائي تمريض', 'طبيبة'],
+                description: 'معايير الأوشا العالمية للسلامة والصحة المهنية.',
+                icon: Shield
+            }
+        ];
+
+        const checkEligibility = (employee, course) => {
+            if (course.targets.includes('الكل')) return true;
+            return course.targets.some(target => 
+                employee.dept.includes(target) || employee.unit.includes(target)
+            );
+        };
+
+        // --- COMPONENTS ---
+
+        const NavButton = ({ active, onClick, icon, label }) => (
+            <button 
+                onClick={onClick}
+                className={`
+                    flex md:flex-row flex-col items-center gap-1 md:gap-3 p-3 rounded-xl transition-all duration-300 group
+                    ${active 
+                        ? 'bg-primary text-white shadow-lg shadow-primary/25' 
+                        : 'text-gray-500 hover:bg-white dark:hover:bg-dark-bg hover:text-primary'}
+                `}
+            >
+                <div className={`${active ? '' : 'group-hover:scale-110 transition-transform'}`}>
+                    {icon}
+                </div>
+                <span className="text-[10px] md:text-sm font-medium">{label}</span>
+            </button>
+        );
+
+        const Sidebar = ({ activeTab, setActiveTab, selectedCourseId, onClearSelection }) => {
+            return (
+                <nav className="fixed bottom-0 w-full md:static md:w-64 bg-light-card dark:bg-dark-card border-t md:border-t-0 md:border-l border-light-border dark:border-dark-border p-2 md:p-6 z-10 flex md:flex-col justify-around md:justify-start gap-1 md:gap-4 transition-colors shadow-lg md:shadow-none">
+                    <NavButton 
+                        active={activeTab === 'dashboard'} 
+                        onClick={() => { setActiveTab('dashboard'); onClearSelection(); }} 
+                        icon={<LayoutDashboard size={20} />} 
+                        label="الرئيسية" 
+                    />
+                    <NavButton 
+                        active={activeTab === 'matrix'} 
+                        onClick={() => { setActiveTab('matrix'); onClearSelection(); }} 
+                        icon={<Network size={20} />} 
+                        label="مصفوفة التدريب" 
+                    />
+                    <NavButton 
+                        active={activeTab === 'courses' || selectedCourseId !== null} 
+                        onClick={() => setActiveTab('courses')} 
+                        icon={<BookOpen size={20} />} 
+                        label="الدورات التدريبية" 
+                    />
+                    <NavButton 
+                        active={activeTab === 'employees'} 
+                        onClick={() => { setActiveTab('employees'); onClearSelection(); }} 
+                        icon={<Users size={20} />} 
+                        label="الموظفين" 
+                    />
+                    
+                    <div className="hidden md:block mt-auto pt-6 border-t border-light-border dark:border-dark-border">
+                        <div className="flex items-center gap-3 px-3 py-2">
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <UserCheck size={16} />
+                            </div>
+                            <div className="text-sm">
+                                <p className="font-bold">مدير النظام</p>
+                                <p className="text-xs text-gray-400">Admin</p>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
+        const StatCard = ({ title, value, icon }) => (
+            <div className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-light-border dark:border-dark-border flex items-center justify-between hover:border-primary/30 transition-colors">
+                <div>
+                    <p className="text-sm text-gray-500 mb-1">{title}</p>
+                    <h3 className="text-3xl font-bold font-number">{value}</h3>
+                </div>
+                <div className="p-4 bg-light-bg dark:bg-dark-bg rounded-xl shadow-sm">
+                    {icon}
+                </div>
+            </div>
+        );
+
+        const Dashboard = ({ totalEmployees, totalCourses, totalDepts, courses, onViewAllCourses }) => {
+            return (
+                <div className="space-y-8 animate-enter max-w-5xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <StatCard 
+                            title="إجمالي الموظفين" 
+                            value={totalEmployees} 
+                            icon={<Users className="text-primary" />} 
+                        />
+                        <StatCard 
+                            title="الدورات المتاحة" 
+                            value={totalCourses} 
+                            icon={<BookOpen className="text-primary" />} 
+                        />
+                        <StatCard 
+                            title="الأقسام" 
+                            value={totalDepts} 
+                            icon={<LayoutDashboard className="text-primary" />} 
+                        />
+
+                        <a 
+                          href="https://nre-nec.com/clips/enfoCour251.html"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="bg-light-card dark:bg-dark-card p-6 rounded-2xl border border-light-border dark:border-dark-border flex items-center justify-between hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
+                        >
+                             <div>
+                               <p className="text-sm text-gray-500 mb-1">رابط خارجي</p>
+                               <h3 className="text-2xl font-bold text-primary group-hover:underline">المصفوفة</h3>
+                             </div>
+                             <div className="p-4 bg-primary/10 rounded-xl text-primary group-hover:scale-110 transition-transform">
+                               <Network size={24} />
+                             </div>
+                        </a>
+                    </div>
+
+                    <div className="bg-light-card dark:bg-dark-card rounded-2xl p-6 border border-light-border dark:border-dark-border">
+                        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                            <Calendar size={20} className="text-primary" />
+                            جدول الدورات السريع
+                        </h3>
+                        <div className="space-y-3">
+                            {courses.slice(0, 4).map(course => (
+                                <div key={course.id} className="flex items-center justify-between p-3 bg-light-bg dark:bg-dark-bg rounded-xl hover:scale-[1.01] transition-transform cursor-default border border-transparent hover:border-primary/10">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
+                                            <course.icon size={18} />
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm">{course.title}</p>
+                                            <p className="text-xs text-gray-500">{course.duration}</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-xs font-medium px-2 py-1 bg-primary/10 text-primary rounded-md">
+                                        نشط
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={onViewAllCourses} className="mt-4 w-full py-2 text-sm text-primary font-bold hover:underline">
+                            عرض جميع الدورات
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const CourseList = ({ courses, onSelectCourse }) => {
+            return (
+                <div className="animate-enter max-w-6xl mx-auto">
+                    <div className="mb-6">
+                        <h2 className="text-2xl font-bold">الدورات التدريبية</h2>
+                        <p className="text-gray-500">اضغط على الدورة لعرض قائمة المرشحين لها</p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {courses.map(course => (
+                            <div 
+                                key={course.id}
+                                onClick={() => onSelectCourse(course)}
+                                className="group bg-light-card dark:bg-dark-card rounded-2xl p-6 border border-light-border dark:border-dark-border cursor-pointer hover:shadow-xl hover:scale-[1.02] hover:border-primary dark:hover:border-primary transition-all duration-300 relative overflow-hidden"
+                            >
+                                <div className="absolute top-0 left-0 w-1 h-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className="p-3 bg-light-bg dark:bg-dark-bg rounded-xl shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
+                                        <course.icon size={24} />
+                                    </div>
+                                    <span className="text-xs font-number font-medium bg-primary/10 text-primary px-3 py-1 rounded-full">
+                                        {course.duration}
+                                    </span>
+                                </div>
+                                <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{course.title}</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4">
+                                    {course.description}
+                                </p>
+                                <div className="flex items-center text-primary text-sm font-bold gap-1 group-hover:gap-2 transition-all">
+                                    عرض المرشحين <ArrowRight size={16} />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const CourseDetail = ({ course, trainees, onBack }) => {
+            return (
+                <div className="animate-enter max-w-4xl mx-auto">
+                    <button 
+                        onClick={onBack}
+                        className="mb-6 flex items-center gap-2 text-gray-500 hover:text-primary transition-colors"
+                    >
+                        <ChevronRight size={20} />
+                        العودة للدورات
+                    </button>
+
+                    <div className="bg-primary text-white rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl shadow-primary/20">
+                        <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+                        <div className="relative z-10">
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <span className="inline-block px-3 py-1 bg-white/20 rounded-lg text-sm mb-3 backdrop-blur-sm">
+                                        {course.duration}
+                                    </span>
+                                    <h1 className="text-3xl font-bold mb-2">{course.title}</h1>
+                                    <p className="text-white/80 max-w-xl">{course.description}</p>
+                                </div>
+                                <div className="hidden md:block p-4 bg-white/10 rounded-2xl backdrop-blur-sm">
+                                    <course.icon size={48} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-2 px-2">
+                            <h3 className="font-bold text-lg">المرشحون للدورة ({trainees.length})</h3>
+                            <div className="text-xs text-gray-500">يتم الترشيح بناءً على القسم والوحدة</div>
+                        </div>
+
+                        {trainees.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {trainees.map(trainee => (
+                                    <div key={trainee.id} className="flex items-center gap-4 p-4 bg-light-card dark:bg-dark-card rounded-xl border border-light-border dark:border-dark-border hover:border-primary/50 transition-colors">
+                                        <div className="w-12 h-12 rounded-full bg-light-bg dark:bg-dark-bg flex items-center justify-center text-primary font-bold border border-light-border dark:border-dark-border">
+                                            {trainee.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-sm">{trainee.name}</p>
+                                            <p className="text-xs text-gray-500 mt-0.5 flex gap-2">
+                                                <span className="font-number">{trainee.id}</span>
+                                                <span>•</span>
+                                                <span>{trainee.dept}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 bg-light-card dark:bg-dark-card rounded-2xl border border-dashed border-light-border dark:border-dark-border">
+                                <Users size={48} className="mx-auto text-light-border dark:text-dark-border mb-4" />
+                                <p className="text-gray-500">لا يوجد مرشحين لهذه الدورة حالياً</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const EmployeeList = ({ employees, courses, checkEligibility }) => {
+            const [searchTerm, setSearchTerm] = useState('');
+
+            const filteredEmployees = useMemo(() => {
+                return employees.filter(emp => 
+                    emp.name.includes(searchTerm) || emp.id.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+            }, [searchTerm, employees]);
+
+            return (
+                <div className="animate-enter max-w-4xl mx-auto">
+                    <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                        <h2 className="text-2xl font-bold w-full md:w-auto">سجل الموظفين</h2>
+                        <div className="relative w-full md:w-96">
+                            <Search className="absolute right-3 top-3 text-gray-500" size={20} />
+                            <input 
+                                type="text" 
+                                placeholder="ابحث بالاسم أو الرقم الوظيفي..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full bg-light-card dark:bg-dark-card border-none rounded-xl py-3 pr-10 pl-4 text-sm focus:ring-2 focus:ring-primary outline-none transition-all placeholder:text-gray-400 dark:text-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="bg-light-card dark:bg-dark-card rounded-2xl overflow-hidden border border-light-border dark:border-dark-border">
+                        {filteredEmployees.map((emp, idx) => {
+                            const empCourses = courses.filter(c => checkEligibility(emp, c));
+
+                            return (
+                                <div key={emp.id} className={`p-4 hover:bg-primary/5 transition-colors ${idx !== filteredEmployees.length - 1 ? 'border-b border-light-border dark:border-dark-border' : ''}`}>
+                                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                                        <div className="flex items-start gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-light-bg dark:bg-dark-bg flex items-center justify-center text-sm font-bold text-primary shrink-0 border border-light-border dark:border-dark-border">
+                                                {emp.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <p className="font-bold text-sm">{emp.name}</p>
+                                                <p className="text-xs text-gray-500 mb-2">{emp.dept} - {emp.unit}</p>
+                                                
+                                                <div className="flex flex-wrap gap-2">
+                                                    {empCourses.length > 0 ? empCourses.map(c => (
+                                                        <span key={c.id} className="text-[10px] px-2 py-1 rounded bg-primary/5 text-primary border border-primary/10">
+                                                            {c.title}
+                                                        </span>
+                                                    )) : (
+                                                        <span className="text-[10px] text-gray-500 italic">لا توجد دورات مستحقة</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right shrink-0">
+                                            <p className="text-xs font-number font-medium bg-light-bg dark:bg-dark-bg px-2 py-1 rounded border border-light-border dark:border-dark-border inline-block">
+                                                {emp.id}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {filteredEmployees.length === 0 && (
+                            <div className="p-8 text-center text-gray-500">
+                                لا توجد نتائج بحث مطابقة
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const TrainingMatrix = ({ courses }) => {
+          const [activeCourseId, setActiveCourseId] = useState(null);
+          const [lockedCourseId, setLockedCourseId] = useState(null);
+          const [connections, setConnections] = useState([]);
+          
+          const deptRefs = useRef(new Map());
+          const courseRefs = useRef(new Map());
+          const svgRef = useRef(null);
+
+          const normalizeText = (text) => {
+            return text.trim()
+              .replace("الأتصالات", "الاتصالات")
+              .replace("العلاقات العامه", "العلاقات العامة")
+              .replace("الكادر الاكاديمي", "الكادر الأكاديمي")
+              .replace("اخصائي", "أخصائي");
+          };
+
+          const departments = useMemo(() => {
+            const depts = new Set();
+            courses.forEach(c => {
+              c.targets.forEach(t => depts.add(normalizeText(t)));
+            });
+            return Array.from(depts).filter(d => d !== 'الكل').sort();
+          }, [courses]);
+
+          const drawConnections = () => {
+            const targetId = lockedCourseId || activeCourseId;
+            if (!targetId) {
+              setConnections([]);
+              return;
+            }
+
+            const course = courses.find(c => c.id === targetId);
+            if (!course) return;
+
+            const courseElem = courseRefs.current.get(targetId);
+            const svgElem = svgRef.current;
+            
+            if (!courseElem || !svgElem) return;
+
+            const newConnections = [];
+            const courseRect = courseElem.getBoundingClientRect();
+            const svgRect = svgElem.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 900;
+
+            let startX, startY;
+            if (isMobile) {
+              startX = courseRect.left + (courseRect.width / 2) - svgRect.left;
+              startY = courseRect.top - svgRect.top; 
+            } else {
+              startX = courseRect.right - svgRect.left;
+              startY = courseRect.top + (courseRect.height / 2) - svgRect.top;
+            }
+
+            const isAll = course.targets.includes('الكل');
+
+            departments.forEach(dept => {
+              const isTarget = isAll || course.targets.some(t => normalizeText(t) === dept);
+              
+              if (isTarget) {
+                const deptElem = deptRefs.current.get(dept);
+                if (deptElem) {
+                  const deptRect = deptElem.getBoundingClientRect();
+                  let endX, endY;
+
+                  if (isMobile) {
+                     endX = deptRect.left + (deptRect.width / 2) - svgRect.left;
+                     endY = deptRect.bottom - svgRect.top + 2;
+                  } else {
+                     endX = deptRect.left - svgRect.left - 2;
+                     endY = deptRect.top + (deptRect.height / 2) - svgRect.top;
+                  }
+
+                  let d = "";
+                  if (isMobile) {
+                      const dy = Math.abs(startY - endY);
+                      const cpOffset = dy * 0.5;
+                      d = `M ${startX} ${startY} C ${startX} ${startY - cpOffset}, ${endX} ${endY + cpOffset}, ${endX} ${endY}`;
+                  } else {
+                      const dx = Math.abs(startX - endX);
+                      const cpOffset = dx * 0.5;
+                      d = `M ${startX} ${startY} C ${startX + cpOffset} ${startY}, ${endX - cpOffset} ${endY}, ${endX} ${endY}`;
+                  }
+                  newConnections.push(d);
+                }
+              }
+            });
+
+            setConnections(newConnections);
+          };
+
+          useEffect(() => {
+            drawConnections();
+            window.addEventListener('resize', drawConnections);
+            window.addEventListener('scroll', drawConnections);
+            
+            return () => {
+              window.removeEventListener('resize', drawConnections);
+              window.removeEventListener('scroll', drawConnections);
+            };
+          }, [activeCourseId, lockedCourseId]);
+
+          const handleCourseClick = (id) => {
+            if (lockedCourseId === id) {
+              setLockedCourseId(null);
+            } else {
+              setLockedCourseId(id);
+              setActiveCourseId(id);
+            }
+          };
+
+          const handleBgClick = () => {
+            setLockedCourseId(null);
+          };
+
+          const styles = `
+            .matrix-container {
+              --primary-purple: #5A2A82;
+              --primary-lime: #b5c42e;
+            }
+            .connector-path {
+                fill: none;
+                stroke: var(--primary-lime);
+                stroke-width: 2.5px;
+                stroke-linecap: round;
+                opacity: 0.8;
+                marker-end: url(#arrowhead);
+                animation: draw 0.4s ease-out forwards;
+            }
+            @keyframes draw {
+                from { opacity: 0; stroke-width: 0; }
+                to { opacity: 0.8; stroke-width: 2.5px; }
+            }
+            .dept-tag.active {
+                background: var(--primary-purple);
+                color: white;
+                border-color: var(--primary-purple);
+                font-weight: bold;
+                transform: scale(1.05);
+                box-shadow: 0 2px 8px rgba(90, 42, 130, 0.3);
+            }
+            .course-card.active, .course-card.locked {
+                border-right-color: var(--primary-lime);
+                background: #fcfcfc;
+                transform: translateX(-5px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+            .course-card.locked {
+                border-color: var(--primary-purple);
+                border-width: 1px 4px 1px 1px;
+            }
+          `;
+
+          return (
+            <div 
+              className="matrix-container relative min-h-screen bg-[#f0f2f5] p-4 md:p-8 animate-enter text-[#333] dir-rtl"
+              onClick={handleBgClick}
+              style={{
+                backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(181, 196, 46, 0.1) 0%, rgba(90, 42, 130, 0.05) 90%)'
+              }}
+            >
+              <style>{styles}</style>
+              
+              <svg 
+                ref={svgRef}
+                className="absolute top-0 left-0 w-full h-full pointer-events-none z-10"
+                style={{ overflow: 'visible' }}
+              >
+                <defs>
+                    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5"
+                        markerWidth="5" markerHeight="5" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#b5c42e" />
+                    </marker>
+                </defs>
+                {connections.map((d, i) => (
+                  <path key={i} d={d} className="connector-path" />
+                ))}
+              </svg>
+
+              <div className="relative z-20 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-8 md:gap-16">
+                
+                <section>
+                  <div className="bg-white/80 backdrop-blur inline-block px-4 py-2 rounded-lg border-r-4 border-[#b5c42e] mb-6 shadow-sm">
+                    <h2 className="text-[#5A2A82] font-bold">الإدارات المستهدفة</h2>
+                  </div>
+                  <div className="flex flex-wrap lg:flex-col gap-3 justify-center lg:justify-start">
+                    {departments.map(dept => {
+                       const targetId = lockedCourseId || activeCourseId;
+                       let isActive = false;
+                       if (targetId) {
+                         const course = courses.find(c => c.id === targetId);
+                         if (course) {
+                           isActive = course.targets.includes('الكل') || course.targets.some(t => normalizeText(t) === dept);
+                         }
+                       }
+
+                       return (
+                        <div
+                          key={dept}
+                          ref={el => { if (el) deptRefs.current.set(dept, el); }}
+                          data-name={dept}
+                          className={`
+                            dept-tag px-4 py-3 bg-white border border-gray-200 rounded-lg text-sm cursor-default transition-all duration-200 text-center relative z-20
+                            ${isActive ? 'active' : 'opacity-100'}
+                            ${(targetId && !isActive) ? 'opacity-30' : ''}
+                          `}
+                        >
+                          {dept}
+                        </div>
+                       );
+                    })}
+                  </div>
+                </section>
+
+                <section>
+                  <div className="flex items-center justify-between mb-6 bg-white/80 backdrop-blur px-4 py-2 rounded-lg border-r-4 border-[#b5c42e] shadow-sm">
+                    <h2 className="text-[#5A2A82] font-bold">الدورات التدريبية</h2>
+                    <span className="text-xs text-gray-500 hidden md:block">💡 اضغط على الدورة لتثبيت الأسهم</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {courses.map(course => {
+                      const isActive = activeCourseId === course.id;
+                      const isLocked = lockedCourseId === course.id;
+                      
+                      return (
+                        <div
+                          key={course.id}
+                          ref={el => { if (el) courseRefs.current.set(course.id, el); }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCourseClick(course.id);
+                          }}
+                          onMouseEnter={() => !lockedCourseId && setActiveCourseId(course.id)}
+                          onMouseLeave={() => !lockedCourseId && setActiveCourseId(null)}
+                          className={`
+                            course-card bg-white p-4 rounded-xl border-r-4 border-gray-200 shadow-sm cursor-pointer flex items-center gap-3 transition-all duration-200 relative z-20
+                            ${isActive ? 'active' : ''}
+                            ${isLocked ? 'locked' : ''}
+                          `}
+                        >
+                          <div className="text-[#5A2A82]">
+                            <course.icon size={24} />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-bold text-gray-700 leading-tight">
+                              {course.title}
+                            </h3>
+                            <p className="text-xs text-gray-500 mt-1">{course.duration}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              </div>
+            </div>
+          );
+        };
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [selectedCourse, setSelectedCourse] = useState(null);
+            const [darkMode, setDarkMode] = useState(false);
+
+            // Derived Stats
+            const totalEmployees = RAW_EMPLOYEES.length;
+            const totalCourses = COURSES.length;
+            const uniqueDepts = useMemo(() => [...new Set(RAW_EMPLOYEES.map(e => e.dept))], []);
+
+            // Filter Trainees for selected course
+            const courseTrainees = useMemo(() => {
+                if (!selectedCourse) return [];
+                return RAW_EMPLOYEES.filter(emp => checkEligibility(emp, selectedCourse));
+            }, [selectedCourse]);
+
+            // Dark Mode Toggle
+            useEffect(() => {
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            const toggleDarkMode = () => setDarkMode(!darkMode);
+
+            return (
+                <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-gray-900 dark:text-gray-100 transition-colors duration-300 font-sans" dir="rtl">
+                    {/* Header */}
+                    <header className="sticky top-0 z-20 bg-light-bg/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-light-border dark:border-dark-border px-6 py-4 flex items-center justify-between transition-colors">
+                        <div className="flex items-center gap-3">
+                            <img 
+                                src="https://nre-nec.github.io/pictures/logo.png" 
+                                alt="Company Logo" 
+                                className="h-12 w-auto object-contain" 
+                            />
+                            <div>
+                                <h1 className="text-xl font-bold text-primary dark:text-primary-300">شركة الشمال</h1>
+                                <p className="text-xs text-gray-500">بوابة التدريب والتطوير</p>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            onClick={toggleDarkMode}
+                            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-primary"
+                        >
+                            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
+                    </header>
+
+                    <div className="flex flex-col md:flex-row min-h-[calc(100vh-80px)]">
+                        
+                        {/* Navigation */}
+                        <Sidebar 
+                            activeTab={activeTab} 
+                            setActiveTab={setActiveTab}
+                            selectedCourseId={selectedCourse?.id ?? null}
+                            onClearSelection={() => setSelectedCourse(null)}
+                        />
+
+                        {/* Main Content */}
+                        <main className={`flex-1 overflow-y-auto ${activeTab === 'matrix' ? 'p-0' : 'p-4 md:p-8 pb-24 md:pb-8'}`}>
+                            
+                            {activeTab === 'dashboard' && !selectedCourse && (
+                                <Dashboard 
+                                    totalEmployees={totalEmployees}
+                                    totalCourses={totalCourses}
+                                    totalDepts={uniqueDepts.length}
+                                    courses={COURSES}
+                                    onViewAllCourses={() => setActiveTab('courses')}
+                                />
+                            )}
+
+                            {activeTab === 'matrix' && !selectedCourse && (
+                                <TrainingMatrix courses={COURSES} />
+                            )}
+
+                            {activeTab === 'courses' && !selectedCourse && (
+                                <CourseList 
+                                    courses={COURSES} 
+                                    onSelectCourse={setSelectedCourse} 
+                                />
+                            )}
+
+                            {selectedCourse && (
+                                <CourseDetail 
+                                    course={selectedCourse} 
+                                    trainees={courseTrainees}
+                                    onBack={() => setSelectedCourse(null)}
+                                />
+                            )}
+
+                            {activeTab === 'employees' && (
+                                <EmployeeList 
+                                    employees={RAW_EMPLOYEES}
+                                    courses={COURSES}
+                                    checkEligibility={checkEligibility}
+                                />
+                            )}
+
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
